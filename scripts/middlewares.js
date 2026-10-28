@@ -749,6 +749,14 @@ const callbackHandler = async (ctx) => {
 
             const updatedDeal = await dealDBService.update({ _id: dealId }, updateFields);
             await adminChannelService.updateDealCard(updatedDeal);
+
+            if (ctx.chat.type !== 'private') {
+                const actionText = isCurrentSeller
+                    ? `🔄 Участник @${user.username || user.first_name} сменил роль на <b>Покупателя</b>.`
+                    : `🙋‍♂️ Участник @${user.username || user.first_name} вступил в сделку как <b>Покупатель</b>.`;
+                await ctx.reply(actionText, { parse_mode: 'HTML' });
+            }
+
             const card = messages.dealCardUser(updatedDeal, user.chat_id, isGuarantor);
             return await ctx.editMessageText(card, {
                 parse_mode: 'HTML',
@@ -803,6 +811,14 @@ const callbackHandler = async (ctx) => {
 
             const updatedDeal = await dealDBService.update({ _id: dealId }, updateFields);
             await adminChannelService.updateDealCard(updatedDeal);
+
+            if (ctx.chat.type !== 'private') {
+                const actionText = isCurrentBuyer
+                    ? `🔄 Участник @${user.username || user.first_name} сменил роль на <b>Продавца</b>.`
+                    : `👨‍💼 Участник @${user.username || user.first_name} вступил в сделку как <b>Продавец</b>.`;
+                await ctx.reply(actionText, { parse_mode: 'HTML' });
+            }
+
             const card = messages.dealCardUser(updatedDeal, user.chat_id, isGuarantor);
             return await ctx.editMessageText(card, {
                 parse_mode: 'HTML',
