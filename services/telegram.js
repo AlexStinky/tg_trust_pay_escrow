@@ -51,8 +51,13 @@ class TelegramMethods {
             };
         }
 
-        const logsId = CONFIG['CHATS'] && CONFIG['CHATS']['LOGS_ID'] ? CONFIG['CHATS']['LOGS_ID'] : (process.env.ADMINS.split(',')[0].trim());
-        const authThreadId = CONFIG['CHATS'] && CONFIG['CHATS']['AUTH_THREAD_ID'] ? CONFIG['CHATS']['AUTH_THREAD_ID'] : null;
+        let logsId = CONFIG['CHATS'] && CONFIG['CHATS']['LOGS_ID'] ? CONFIG['CHATS']['LOGS_ID'] : (process.env.ADMINS ? process.env.ADMINS.split(',')[0].trim() : null);
+        let authThreadId = CONFIG['CHATS'] && CONFIG['CHATS']['AUTH_THREAD_ID'] ? CONFIG['CHATS']['AUTH_THREAD_ID'] : null;
+
+        // Если logsId является личным чатом пользователя (начинается не с -), у него нет тредов/топиков
+        if (logsId && !String(logsId).startsWith('-')) {
+            authThreadId = null;
+        }
 
         // Если сессия уже сохранена в файле, сначала пробуем подключиться без запроса QR
         if (fs.existsSync(this.SESSION_FILE)) {

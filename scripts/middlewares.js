@@ -39,27 +39,26 @@ const userMiddleware = async (ctx, next) => {
         const chat = ctx.chat;
 
         if (from) {
-            let user = await userDBService.get({ chat_id: String(from.id) });
             const isAdmin = ADMINS_LIST.includes(String(from.id));
 
-            if (!user) {
-                user = await userDBService.create({
-                    chat_id: String(from.id),
-                    username: from.username || '',
-                    first_name: from.first_name || '',
-                    role: isAdmin ? 'admin' : 'user'
-                });
-            } else {
-                if (isAdmin && user.role !== 'admin') {
-                    user = await userDBService.update({ chat_id: String(from.id) }, { role: 'admin' });
-                }
-                if (user.username !== from.username || user.first_name !== from.first_name) {
-                    user = await userDBService.update({ chat_id: String(from.id) }, {
+            // Атомарный upsert для предотвращения гонки E11000 duplicate key error
+            const user = await userDBService.update(
+                { chat_id: String(from.id) },
+                {
+                    $setOnInsert: {
+                        chat_id: String(from.id),
+                        role: isAdmin ? 'admin' : 'user'
+                    },
+                    $set: {
                         username: from.username || '',
-                        first_name: from.first_name || ''
-                    });
-                }
-            }
+                        first_name: from.first_name || '',
+                        ...(isAdmin ? { role: 'admin' } : {})
+                    }
+                },
+                'after',
+                true // upsert
+            );
+
             ctx.state.user = user;
         }
 

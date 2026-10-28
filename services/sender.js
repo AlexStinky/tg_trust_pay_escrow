@@ -109,6 +109,23 @@ class Sender {
             return res;
         } catch (error) {
             const desc = error.response ? error.response.description : error.message;
+
+            // Если топик/тред не найден, пробуем отправить в общий чат без message_thread_id
+            if (desc && desc.includes("message thread not found") && message.extra && message.extra.message_thread_id) {
+                try {
+                    const fallbackExtra = { ...message.extra };
+                    delete fallbackExtra.message_thread_id;
+                    const finalExtra = { parse_mode: 'HTML', ...fallbackExtra };
+                    if (message.type === 'photo') {
+                        return await this.bot.telegram.sendPhoto(chat_id, message.file, finalExtra);
+                    } else {
+                        return await this.bot.telegram.sendMessage(chat_id, message.text, finalExtra);
+                    }
+                } catch (fallbackErr) {
+                    console.error(`[Sender Fallback Error chat=${chat_id}]:`, fallbackErr.message);
+                }
+            }
+
             if (this.checkForbidden(desc)) {
                 await userDBService.update({ chat_id }, { is_blocked: true });
             } else if (desc && desc.includes("message is not modified")) {
