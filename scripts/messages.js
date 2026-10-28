@@ -140,12 +140,27 @@ const messages = {
 
         if (deal.status === 'created') {
             const roleRow = [];
-            if (!deal.buyer || !deal.buyer.chat_id) {
-                roleRow.push({ text: '🙋‍♂️ Стать Покупателем', callback_data: `deal_role_buyer_${deal._id}` });
+            const hasBuyer = !!(deal.buyer && deal.buyer.chat_id);
+            const hasSeller = !!(deal.seller && deal.seller.chat_id);
+
+            // Кнопка стать/сменить на Покупателя
+            if (!hasBuyer) {
+                if (hasSeller && viewerChatId && String(deal.seller.chat_id) === String(viewerChatId)) {
+                    roleRow.push({ text: '🔄 Сменить роль на Покупателя', callback_data: `deal_role_buyer_${deal._id}` });
+                } else {
+                    roleRow.push({ text: '🙋‍♂️ Стать Покупателем', callback_data: `deal_role_buyer_${deal._id}` });
+                }
             }
-            if (!deal.seller || !deal.seller.chat_id) {
-                roleRow.push({ text: '👨‍💼 Стать Продавцом', callback_data: `deal_role_seller_${deal._id}` });
+
+            // Кнопка стать/сменить на Продавца
+            if (!hasSeller) {
+                if (hasBuyer && viewerChatId && String(deal.buyer.chat_id) === String(viewerChatId)) {
+                    roleRow.push({ text: '🔄 Сменить роль на Продавца', callback_data: `deal_role_seller_${deal._id}` });
+                } else {
+                    roleRow.push({ text: '👨‍💼 Стать Продавцом', callback_data: `deal_role_seller_${deal._id}` });
+                }
             }
+
             if (roleRow.length > 0) keyboard.push(roleRow);
 
             keyboard.push([

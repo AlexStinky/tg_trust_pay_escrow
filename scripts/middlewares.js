@@ -708,23 +708,46 @@ const callbackHandler = async (ctx) => {
     } catch (e) {}
 
     // ------------------------------------------
-    // Принятие роли в сделке
+    // Принятие/смена роли в сделке
     // ------------------------------------------
     if (data.startsWith('deal_role_')) {
         const [, , role, dealId] = data.split('_');
         const deal = await dealDBService.get({ _id: dealId });
         if (!deal) return;
 
+        if (deal.status !== 'created') {
+            return await ctx.reply('❌ Изменение ролей доступно только на этапе согласования условий.');
+        }
+
+        const isCurrentBuyer = deal.buyer && String(deal.buyer.chat_id) === String(user.chat_id);
+        const isCurrentSeller = deal.seller && String(deal.seller.chat_id) === String(user.chat_id);
+
         if (role === 'buyer') {
-            if (deal.seller && String(deal.seller.chat_id) === String(user.chat_id)) {
-                return await ctx.reply('❌ Вы уже являетесь продавцом в этой сделке!');
+            // Если уже покупатель
+            if (isCurrentBuyer) {
+                return await ctx.reply('ℹ️ Вы уже являетесь покупателем в этой сделке.');
             }
-            const updatedDeal = await dealDBService.update({ _id: dealId }, {
+
+            // Если является продавцом, а покупателя еще нет — разрешаем смену роли
+            const updateFields = {
                 'buyer.chat_id': String(user.chat_id),
                 'buyer.username': user.username || '',
                 'buyer.first_name': user.first_name || '',
-                'buyer.return_wallet': user.trc20_wallet || ''
-            });
+                'buyer.return_wallet': user.trc20_wallet || '',
+                'buyer.terms_confirmed': false
+            };
+
+            if (isCurrentSeller) {
+                updateFields['seller.chat_id'] = null;
+                updateFields['seller.username'] = '';
+                updateFields['seller.first_name'] = '';
+                updateFields['seller.payout_wallet'] = '';
+                updateFields['seller.terms_confirmed'] = false;
+            } else if (deal.buyer && deal.buyer.chat_id) {
+                return await ctx.reply('❌ Место покупателя уже занято другим участником!');
+            }
+
+            const updatedDeal = await dealDBService.update({ _id: dealId }, updateFields);
             await adminChannelService.updateDealCard(updatedDeal);
             const card = messages.dealCardUser(updatedDeal, user.chat_id, isGuarantor);
             return await ctx.editMessageText(card, {
@@ -734,8 +757,14 @@ const callbackHandler = async (ctx) => {
         }
 
         if (role === 'seller') {
-            if (deal.buyer && String(deal.buyer.chat_id) === String(user.chat_id)) {
-                return await ctx.reply('❌ Вы уже являетесь покупателем в этой сделке!');
+            // Если уже продавец
+            if (isCurrentSeller) {
+                return await ctx.reply('ℹ️ Вы уже являетесь продавцом в этой сделке.');
+            }
+
+            // Если является покупателем, но место продавца уже занято
+            if (!isCurrentBuyer && deal.seller && deal.seller.chat_id) {
+                return await ctx.reply('❌ Место продавца уже занято другим участником!');
             }
 
             // Если у продавца еще не сохранен кошелек, просим его ввести в ЛС
@@ -755,12 +784,24 @@ const callbackHandler = async (ctx) => {
                 return await ctx.reply(`👨‍💼 @${user.username || user.first_name}, я отправил вам запрос кошелька в личные сообщения бота.`);
             }
 
-            const updatedDeal = await dealDBService.update({ _id: dealId }, {
+            const updateFields = {
                 'seller.chat_id': String(user.chat_id),
                 'seller.username': user.username || '',
                 'seller.first_name': user.first_name || '',
-                'seller.payout_wallet': user.trc20_wallet
-            });
+                'seller.payout_wallet': user.trc20_wallet,
+                'seller.terms_confirmed': false
+            };
+
+            // Если участник меняет роль с покупателя на продавца
+            if (isCurrentBuyer) {
+                updateFields['buyer.chat_id'] = null;
+                updateFields['buyer.username'] = '';
+                updateFields['buyer.first_name'] = '';
+                updateFields['buyer.return_wallet'] = '';
+                updateFields['buyer.terms_confirmed'] = false;
+            }
+
+            const updatedDeal = await dealDBService.update({ _id: dealId }, updateFields);
             await adminChannelService.updateDealCard(updatedDeal);
             const card = messages.dealCardUser(updatedDeal, user.chat_id, isGuarantor);
             return await ctx.editMessageText(card, {
