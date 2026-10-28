@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const {
     TelegramClient,
@@ -39,20 +40,23 @@ class TelegramMethods {
     }
 
     async create(k = 0) {
-        let CONFIG;
+        let CONFIG = null;
+        const configPath = path.resolve(__dirname, '../config.json');
         try {
-            CONFIG = JSON.parse(await fs.promises.readFile('./config.json', 'utf-8'));
+            if (fs.existsSync(configPath)) {
+                CONFIG = JSON.parse(await fs.promises.readFile(configPath, 'utf-8'));
+            }
         } catch (e) {
-            CONFIG = {
-                CHATS: {
-                    LOGS_ID: process.env.ADMINS ? process.env.ADMINS.split(',')[0].trim() : '-1002904523189',
-                    AUTH_THREAD_ID: '2'
-                }
-            };
+            console.error('[Userbot] Ошибка чтения config.json:', e.message);
         }
 
-        let logsId = CONFIG['CHATS'] && CONFIG['CHATS']['LOGS_ID'] ? CONFIG['CHATS']['LOGS_ID'] : (process.env.ADMINS ? process.env.ADMINS.split(',')[0].trim() : null);
-        let authThreadId = CONFIG['CHATS'] && CONFIG['CHATS']['AUTH_THREAD_ID'] ? CONFIG['CHATS']['AUTH_THREAD_ID'] : null;
+        const logsId = CONFIG && CONFIG.CHATS && CONFIG.CHATS.LOGS_ID
+            ? CONFIG.CHATS.LOGS_ID
+            : (process.env.ADMINS ? process.env.ADMINS.split(',')[0].trim() : null);
+
+        let authThreadId = CONFIG && CONFIG.CHATS && CONFIG.CHATS.AUTH_THREAD_ID
+            ? CONFIG.CHATS.AUTH_THREAD_ID
+            : null;
 
         // Если logsId является личным чатом пользователя (начинается не с -), у него нет тредов/топиков
         if (logsId && !String(logsId).startsWith('-')) {

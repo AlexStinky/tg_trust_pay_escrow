@@ -94,7 +94,8 @@ class Sender {
 
             switch (message.type) {
                 case 'photo':
-                    res = await this.bot.telegram.sendPhoto(chat_id, message.file, extra);
+                    const photoPayload = Buffer.isBuffer(message.file) ? { source: message.file } : message.file;
+                    res = await this.bot.telegram.sendPhoto(chat_id, photoPayload, extra);
                     break;
                 case 'edit_text':
                     res = await this.bot.telegram.editMessageText(chat_id, message.message_id, null, message.text, extra);
@@ -117,7 +118,8 @@ class Sender {
                     delete fallbackExtra.message_thread_id;
                     const finalExtra = { parse_mode: 'HTML', ...fallbackExtra };
                     if (message.type === 'photo') {
-                        return await this.bot.telegram.sendPhoto(chat_id, message.file, finalExtra);
+                        const photoPayload = Buffer.isBuffer(message.file) ? { source: message.file } : message.file;
+                        return await this.bot.telegram.sendPhoto(chat_id, photoPayload, finalExtra);
                     } else {
                         return await this.bot.telegram.sendMessage(chat_id, message.text, finalExtra);
                     }
