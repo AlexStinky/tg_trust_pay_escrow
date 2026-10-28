@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      HOST: 146.103.122.160
+      HOST: 178.162.252.86
       USERNAME: root
-      DIR_NAME: tg_escrow_me
-      GITHUB_PATH: git@github.com:AlexStinky/tg_escrow_me
+      DIR_NAME: tg_trust_pay_escrow
+      GITHUB_PATH: git@github.com:AlexStinky/tg_trust_pay_escrow
       BRANCH: main
-      PM2_NAME: tg_escrow_me
+      PM2_NAME: tg_trust_pay_escrow
 
     steps:
     - name: Deploy using ssh
