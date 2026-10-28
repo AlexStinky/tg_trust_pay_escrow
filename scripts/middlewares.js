@@ -457,16 +457,10 @@ const textHandler = async (ctx) => {
                 chat_url: createdChatInfo ? createdChatInfo.url : null,
                 status: 'created',
                 fee_percent: config.fee_percent,
-                assigned_escrow_wallet: escrowWallet,
-                buyer: {
-                    chat_id: String(user.chat_id),
-                    username: user.username || '',
-                    first_name: user.first_name || '',
-                    return_wallet: user.trc20_wallet || ''
-                }
+                assigned_escrow_wallet: escrowWallet
             });
 
-            await auditService.log(newDeal, user.chat_id, 'buyer', 'create_deal', {
+            await auditService.log(newDeal, user.chat_id, 'user', 'create_deal', {
                 auto_created_chat: !!createdChatInfo
             });
             await adminChannelService.postNewDealCard(newDeal);
@@ -475,29 +469,28 @@ const textHandler = async (ctx) => {
             const inviteLink = `https://t.me/${botInfo.username}?start=deal_${newDeal._id}`;
 
             let response = `🎉 <b>Сделка #${dealNumber} успешно создана!</b>\n\n`;
-            response += `Вы назначены: <b>Покупатель</b>\n\n`;
 
             if (createdChatInfo && createdChatInfo.url) {
-                response += `👥 <b>Отдельная группа для сделки автоматически создана:</b>\n`;
+                response += `👥 <b>Перейдите в группу сделки для выбора роли (Покупатель/Продавец) и согласования условий:</b>\n\n`;
                 response += `👉 <a href="${createdChatInfo.url}"><b>Вступить в группу сделки #${dealNumber}</b></a>\n\n`;
-                response += `Отправьте эту ссылку второй стороне: <code>${createdChatInfo.url}</code>\n\n`;
+                response += `Ссылка для приглашения второй стороны:\n<code>${createdChatInfo.url}</code>\n\n`;
+                response += `ℹ️ <i>Роли участников выбираются непосредственно внутри чата сделки.</i>`;
 
-                // Отправляем приветствие прямо в созданную группу
+                // Отправляем приветствие с кнопками выбора ролей прямо в созданную группу
                 await sender.sendMessage(createdChatInfo.id, {
                     text: messages.dealGroupWelcome(newDeal).text,
                     extra: messages.dealGroupWelcome(newDeal).extra
                 });
             } else {
-                response += `🔗 <b>Ссылка-приглашение для второй стороны:</b>\n<code>${inviteLink}</code>\n\n`;
-                response += `💡 <i>Вы можете переслать эту ссылку партнеру или добавить бота в существующую группу и написать <code>/link ${dealNumber}</code></i>\n\n`;
+                response += `👥 <b>Ссылка-приглашение для сделки:</b>\n<code>${inviteLink}</code>\n\n`;
+                response += `💡 <i>Вы можете отправить ссылку партнеру или добавить бота в вашу группу и написать <code>/link ${dealNumber}</code></i>\n\n`;
+                response += `ℹ️ <i>Роли участников выбираются непосредственно внутри чата сделки.</i>`;
             }
-
-            response += `Используйте кнопки ниже для настройки условий сделки:`;
 
             return await ctx.reply(response, {
                 parse_mode: 'HTML',
                 disable_web_page_preview: false,
-                reply_markup: messages.dealInlineKeyboard(newDeal, user.chat_id)
+                ...messages.mainMenuReplyKeyboard(isGuarantor)
             });
         }
 

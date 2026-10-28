@@ -233,13 +233,7 @@ class TelegramMethods {
                             chat_url: chat.url,
                             chat_title: title,
                             fee_percent: config.fee_percent,
-                            assigned_escrow_wallet: escrowWallet,
-                            buyer: {
-                                chat_id: String(user.chat_id),
-                                username: user.username || '',
-                                first_name: user.first_name || '',
-                                return_wallet: user.trc20_wallet || ''
-                            }
+                            assigned_escrow_wallet: escrowWallet
                         });
                     }
 
