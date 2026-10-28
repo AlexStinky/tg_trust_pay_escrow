@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { Telegraf } = require('telegraf');
 
 const middlewares = require('./scripts/middlewares');
+
 const { sender } = require('./services/sender');
 const { blockchainService } = require('./services/blockchain');
 const { adminChannelService } = require('./services/admin_channel');
@@ -55,8 +56,14 @@ bot.catch((err, ctx) => {
 
 // Запуск бота и фоновых сервисов
 (async () => {
+    const fs = require('fs');
+
     try {
         await sender.create(bot);
+
+        if (!fs.existsSync('./config.json')) {
+            fs.writeFileSync('./config.json', fs.readFileSync('./config_example.json'));
+        }
 
         // Инициализация и запуск юзербота (интерактивная авторизация в Telegram при необходимости)
         userbotService.create().then(ready => {
