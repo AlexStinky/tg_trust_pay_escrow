@@ -89,6 +89,7 @@ class Sender {
             let res = null;
             const extra = {
                 parse_mode: 'HTML',
+                caption: message.caption || message.text,
                 ...message.extra
             };
 

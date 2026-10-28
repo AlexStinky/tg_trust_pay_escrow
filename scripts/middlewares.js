@@ -42,19 +42,20 @@ const userMiddleware = async (ctx, next) => {
             const isAdmin = ADMINS_LIST.includes(String(from.id));
 
             // Атомарный upsert для предотвращения гонки E11000 duplicate key error
+            const updateDoc = {
+                $setOnInsert: {
+                    chat_id: String(from.id)
+                },
+                $set: {
+                    username: from.username || '',
+                    first_name: from.first_name || '',
+                    role: isAdmin ? 'admin' : 'user'
+                }
+            };
+
             const user = await userDBService.update(
                 { chat_id: String(from.id) },
-                {
-                    $setOnInsert: {
-                        chat_id: String(from.id),
-                        role: isAdmin ? 'admin' : 'user'
-                    },
-                    $set: {
-                        username: from.username || '',
-                        first_name: from.first_name || '',
-                        ...(isAdmin ? { role: 'admin' } : {})
-                    }
-                },
+                updateDoc,
                 'after',
                 true // upsert
             );
