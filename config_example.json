@@ -1,0 +1,18 @@
+{
+    "CREATING_CHATS": true,
+    "CREATE_DELAY": 5,
+    "PRICE_DIFF_PERCENT": 2,
+    "MIN_PRICE_USD": 10,
+    "MAX_PRICE_USD": 1000000,
+    "CHATS": {
+        "LOGS_ID": "-1004372600952",
+        "VERIFY_USERNAME": "",
+        "AUTH_THREAD_ID": "2",
+        "NEW_DEALS_THREAD_ID": "4"
+    },
+    "DEAL_SETTINGS": {
+        "fee": 5,
+        "fix": 5,
+        "minimum": 100
+    }
+}

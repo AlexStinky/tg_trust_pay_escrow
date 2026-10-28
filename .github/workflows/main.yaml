@@ -1,0 +1,33 @@
+name: Deploy
+on: 
+  push:
+    branches: [ "main" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      HOST: 146.103.122.160
+      USERNAME: root
+      DIR_NAME: tg_escrow_me
+      GITHUB_PATH: git@github.com:AlexStinky/tg_escrow_me
+      BRANCH: main
+      PM2_NAME: tg_escrow_me
+
+    steps:
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.HOST }}
+        username: ${{ env.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: 22
+        script: |
+          cd /opt/${{ env.DIR_NAME }}
+          git fetch origin
+          git checkout ${{ env.BRANCH }}
+          git pull origin ${{ env.BRANCH }}
+          npm install --production
+
+          pm2 reload ${{ env.PM2_NAME }} --time || pm2 start bot.js --name ${{ env.PM2_NAME }} --time
+          pm2 save

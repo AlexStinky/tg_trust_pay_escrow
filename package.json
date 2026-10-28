@@ -1,0 +1,23 @@
+{
+  "name": "tg_trust_pay_escrow",
+  "version": "1.0.0",
+  "description": "Semi-automated Telegram Escrow Service for USDT TRC20",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "login:userbot": "node scripts/login_userbot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^8.6.0",
+    "mongoose": "^8.1.2",
+    "p-queue": "^9.2.0",
+    "qrcode": "^1.5.4",
+    "telegraf": "^3.38.0",
+    "telegram": "^2.26.22",
+    "tronweb": "^6.0.2"
+  }
+}

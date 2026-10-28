@@ -1,0 +1,635 @@
+start_message: '🛡 <b>EscrowMe</b> 🛡
+
+<i>Ваш гарант-сервис в Telegram</i>
+
+
+Я защищаю обе стороны. Быстро. Безопасно. Анонимно.
+
+
+<b>Покупатель</b>: Будьте на 100% защищены от скама и мошенничества
+
+<b>Продавец</b>: Укрепляйте доверие с помощью безопасных сделок через гаранта
+
+
+Как именно это работает?
+
+◾️ Покупатель или продавец начинает сделку командой <b>/create</b>
+
+◾️ Я создам группу для сделки и выдам вам ссылку
+
+◾️ Покупатель и продавец должны вступить в эту группу
+
+◾️ Каждая сторона должна написать <code>/buyer ваш_кошелек</code> или <code>/seller ваш_кошелек</code> — замените "ваш_кошелек" на адрес вашего кошелька
+
+◾️ Договоритесь о монете. Кошельки должны быть в одной и той же сети
+
+◾️ После того как оба подтвердят роли, я выдам кошелек гаранта — покупатель должен отправить средства туда
+
+◾️ Сделка прошла успешно? Введите <b>/pay_seller</b>, чтобы перевести средства
+
+◾️ Возникла проблема? Введите <b>/dispute</b> — мы решим ее справедливо
+
+
+<b>Комиссия гаранта:</b>
+
+${fee}% — минимум $${fix}'
+
+instructions_message: 'Инструкция: ${url}'
+
+newChat_message: 'Группа гаранта создана
+
+
+Ссылка на группу: <b>${url}</b>
+
+
+Теперь вступите в эту группу и перешлите данное сообщение покупателю/продавцу.'
+
+role_message: '👤 ${key} <b>${user}</b> [<b>${id}</b>]
+
+
+✅ КОШЕЛЕК ${key}
+
+<code>${address}</code> [<b>${network}</b>]
+
+
+${conditionRemind}'
+
+dealRecommendations_message: 'Осталось указать условия сделки с помощью команд:
+
+<b>/seller_condition</b> и <b>/buyer_condition</b>
+
+А продавец должен указать сумму:
+
+<b>/price 100</b>'
+
+transactionInfo_message: '#️⃣ <b>Сделка</b>: <code>${id}</code>
+
+
+<b>👤 ПРОДАВЕЦ</b>:
+
+<b>${seller}</b> [<code>${seller_id}</code>]
+
+<b>👤 ПОКУПАТЕЛЬ</b>:
+
+<b>${buyer}</b> [<code>${buyer_id}</code>]
+
+
+<b>Продавец, укажите сумму сделки!</b>
+
+Команда: <b>/price 200</b> (установит цену в $200)
+
+
+<b>Покупатель</b>: Цена согласована с продавцом? <u>Теперь можете переходить к оплате!</u>
+
+
+${conditions}
+
+
+🟢 <b>АДРЕС ГАРАНТА</b> 🟢
+
+<b>Покупатель</b>: отправляйте оплату только на этот адрес:
+
+<code>${escrow_address}</code> [<b>${escrow_network}</b>]
+
+
+💲<i>Проверяйте баланс кошелька гаранта в любое время с помощью</i> <b>/balance</b>
+
+
+<a href="https://telegra.ph/Komissiya-servisa-i-izderzhki-na-obrabotku-05-06"><i>О комиссиях и сборах</i></a>'
+
+price_message: '#️⃣ <b>Сделка</b>: <code>${id}</code>
+
+
+<b>👤 ПРОДАВЕЦ</b>:
+
+<b>${seller}</b> [<code>${seller_id}</code>]
+
+<b>👤 ПОКУПАТЕЛЬ</b>:
+
+<b>${buyer}</b> [<code>${buyer_id}</code>]
+
+
+💰 СУММА: <b>${price_amount} ${price_currency}</b>
+
+*комиссия гаранта включена
+
+
+<b>Покупатель</b>: <u>Теперь можете переходить к оплате!</u>
+
+
+🟢 <b>АДРЕС ГАРАНТА</b> 🟢
+
+<b>Покупатель</b>: отправляйте оплату только на этот адрес:
+
+<code>${escrow_address}</code> [<b>${escrow_network}</b>]
+
+
+💲<i>Проверяйте баланс кошелька гаранта в любое время с помощью</i> <b>/balance</b>'
+
+balance_message: '📍 КОШЕЛЕК ГАРАНТА
+
+
+💬 Дождитесь отображения баланса здесь, затем продолжайте сделку. Средства появятся после 1 подтверждения сети блокчейн.
+
+
+💲 БАЛАНС: <b>${balance}</b>
+
+*за вычетом комиссии гаранта'
+
+refresh_message: '📍 КОШЕЛЕК ГАРАНТА
+
+💲 ОБЩАЯ СУММА: <b>${amount} ${network}</b>
+
+Список транзакций:
+
+${list}'
+
+paymentSuccessful_message: '✅ Оплата прошла успешно!
+
+💲 БАЛАНС: <b>${balance}</b>
+
+*за вычетом комиссии гаранта
+
+
+<b>Продавец</b>: <u>Пожалуйста, приступайте к передаче товара/оказанию услуги!</u>
+
+
+Команды для завершения сделки:
+
+🤝 <b>/pay_seller</b> – Выплатить деньги продавцу.
+
+🚫 <b>/refund_buyer</b> – Вернуть деньги покупателю.
+
+⚠️ Разногласия? Используйте <b>/dispute</b> для вызова арбитра.'
+
+paymentNotEnough_message: '⚠️ Оплата прошла успешно, но средств недостаточно.
+
+
+➕ ПОЛУЧЕНО: <b>${received}</b>
+
+
+💲 ОБЩИЙ БАЛАНС: <b>${balance}</b>
+
+*не считая комиссии
+
+
+<b>Покупатель</b>: Полученной суммы недостаточно. Пожалуйста, отправьте недостающую сумму на адрес гаранта.
+
+<i>Используйте</i> <b>/verify</b><i>, чтобы снова увидеть адрес гаранта.</i>
+
+
+<b>Продавец</b>: Если вы принимаете текущий общий баланс в качестве полной оплаты, можете приступать к передаче товара/оказанию услуги.
+
+
+Команды для завершения сделки:
+
+🤝 <b>/pay_seller</b> – Выплатить деньги продавцу.
+
+🚫 <b>/refund_buyer</b> – Вернуть деньги покупателю.
+
+⚠️ Разногласия? Используйте <b>/dispute</b> для вызова арбитра.'
+
+blockchain_message: 'Перед отправкой средств вы можете проверить подлинность адреса гаранта, перейдя в <b>@${chat}</b> и гаписав эту команду:
+
+<code>/verify [АДРЕС ГАРАНТА]</code>
+
+
+🛑 Обязательно ознакомьтесь с другими нашими функциями безопасности во избежание мошенничества:
+
+Нажмите здесь, чтобы узнать, как вычислить фейковых админов, и нажмите здесь, чтобы узнать, как проверить адреса гаранта и многое другое.
+
+
+🟢 <b>АДРЕС ГАРАНТА</b>:
+
+<code>${address}</code> [<b>${network}</b>]
+
+
+🌐 ССЫЛКА НА БЛОКЧЕЙН: <b>${url}</b>
+
+
+💬 Введите <b>/balance</b> после 1 подтверждения.'
+
+verify_message: '#️⃣ Сделка: <code>${id}</code>
+
+
+👤 <b>ПРОДАВЕЦ</b>:
+
+<b>${seller}</b> [<code>${seller_id}</code>]
+
+👤 <b>ПОКУПАТЕЛЬ</b>:
+
+<b>${buyer}</b> [<code>${buyer_id}</code>]
+
+
+💰 СУММА: <b>${price_amount} ${price_currency}</b>
+
+<a href="https://telegra.ph/Komissiya-servisa-i-izderzhki-na-obrabotku-05-06"><i>О комиссиях и сборах</i></a>
+
+
+🟢 АДРЕС ГАРАНТА:
+
+<code>${escrow_address}</code> [<b>${escrow_network}</b>]'
+
+conditions_message: '<b><u>Условия продавца:</u>
+
+${seller}
+
+
+<u>Условия покупателя:</u>
+
+${buyer}</b>'
+
+newCondition_message: 'Введите детали условий для этой сделки:'
+updateCondition_message: 'Хотите изменить условия?'
+conditionUpdated_message: 'Условия обновлены!'
+
+balanceIsUpdated_message: 'Баланс обновлен!'
+
+youSetPrice_message: 'Вы установили цену!'
+
+review_message: '💬 ${data}
+
+📲 Отзыв от: ${user}'
+reviewIsEmpty_message: 'После завершения сделки каждая сторона может написать <code>/review ваш_отзыв</code> — замените "ваш_отзыв" на описание ваших впечатлений.'
+reviewIsSent_message: 'Спасибо, отзыв принят! Отзыв можно изменить в течение получаса, просто использовав ту же команду.'
+reviewRemind_message: '<b>${user}</b> уважаемый покупатель! Не могли бы вы оставить отзыв о нашем сервисе? Будем очень признательны! 🫡
+
+
+Вот пример, как это сделать... это должно быть одно сообщение:
+
+<i><b>/review</b> Я очень доволен сервисом! Все быстро и гладко. Теперь я чувствую себя в гораздо большей безопасности, совершая сделки в Telegram!</i>'
+
+dealIsReset_message: 'Сделка сброшена!'
+dealIsRestarted_message: 'Сделка была перезапущена!'
+
+checkRestart_message: '${user}, вы уверены?'
+
+checkRefund_message: 'Вы уверены?'
+confirmRefund_message: 'Деньги были возвращены покупателю, сделка была перезапущена.'
+
+checkPay_message: 'Вы уверены?'
+confirmPay_message: 'Продавец получит деньги на свой кошелек.'
+
+checkReview_message: '${user}, вы уверены?'
+
+checkReset_message: 'Вы уверены?'
+
+creatingPayout_message: '⏳ Создание выплаты...
+
+${tx}'
+waitingPayout_message: '⏳ Выплата создана! Ожидайте проверки!
+
+${tx}'
+processPayout_message: '⏳ Выплата в обработке...
+
+
+${tx}'
+checkPayout_message: '⌛️ Выплата проверяется...
+
+
+${tx}'
+failPayout_message: '❌ Ошибка выплаты. Пожалуйста, свяжитесь с администратором: <b>/dispute</b>
+
+
+${tx}'
+system_failPayout_message: '❌ Выплата отменена. Пожалуйста, свяжитесь с администратором: <b>/dispute</b>
+
+
+${tx}'
+cancelPayout_message: '❌ Произошла системная ошибка. Пожалуйста, свяжитесь с администратором: <b>/dispute</b>
+
+
+${tx}'
+
+amountTooSmallPayout_message: '❌ Выплата отменена, так как сумма слишком мала.'
+
+refundPayout_message: '↩️ Средства возвращены <b>${user}</b>.
+
+
+💸 СУММА: <b>${amount} ${network}</b>
+
+
+🟢 АДРЕС:
+
+<code>${address}</code>
+
+
+${tx}'
+
+payout_message: '✅ Средства выплачены <b>${user}</b>.
+
+
+💸 СУММА: <b>${amount} ${network}</b>
+
+
+🟢 АДРЕС:
+
+<code>${address}</code>
+
+
+${tx}
+
+
+<u><b>Сделка прошла гладко? Оставьте нам быстрый отзыв!</b></u>
+
+<i>Пример: <b>/review</b> Я очень доволен сервисом! Все быстро и гладко. Теперь я чувствую себя в гораздо большей безопасности, совершая сделки в Telegram!</i>'
+
+failPayoutLogs_message: '❌ Ошибка выплаты.
+
+<code>${id}</code>
+
+${acquiring}
+
+Чат:
+
+${url}'
+
+newDealLogs_message: '#️⃣ <b>Сделка</b>: <code>${id}</code> <b>[${network}]</b>
+
+———————————
+
+👤 ПРОДАВЕЦ <b>${seller} [${seller_id}]</b>
+
+👤 ПОКУПАТЕЛЬ <b>${buyer} [${buyer_id}]</b>
+
+———————————
+
+Чат: ${url}'
+
+checkDispute_message: 'Вы уверены, что хотите открыть спор и пригласить арбитра для вмешательства?'
+confirmDispute_message: 'Арбитр скоро присоединится'
+
+logsDispute_message: '<b>${user}</b> открыл спор!
+
+
+ℹ️ ID СДЕЛКИ: <code>${id}</code>
+
+
+Эквайринг: <b>#${acquiring}</b>
+
+
+Статус: <b>${status}</b>
+
+
+⚡️ ПОКУПАТЕЛЬ
+
+<b>${buyer}</b>
+
+<code>${buyer_address}</code> [${buyer_network}]
+
+
+⚡️ ПРОДАВЕЦ
+
+<b>${seller}</b>
+
+<code>${seller_address}</code> [${seller_network}]
+
+
+Чат:
+
+<b>${url}</b>'
+
+buyerDealCompleted_message: 'Сделка завершена! ↩️ Средства возвращены ${user}. Осталось только оставить отзыв!
+
+<i>Пример: /review Я очень доволен сервисом! Все быстро и гладко. Теперь я чувствую себя в гораздо большей безопасности, совершая сделки в Telegram!</i>'
+sellerDealCompleted_message: 'Сделка завершена! 💸 Средства переведены ${user}. Осталось только оставить отзыв!
+
+<i>Пример: /review Я очень доволен сервисом! Все быстро и гладко. Теперь я чувствую себя в гораздо большей безопасности, совершая сделки в Telegram!</i>'
+
+checkCancelDeal_message: 'Вы уверены?'
+confirmCancelDeal_message: 'Сделка отменяется...'
+
+createWaitForIt_message: 'Создание группы гаранта. Пожалуйста, подождите...'
+paymentWaitForIt_message: 'Средства поступили на кошелек. Ожидание подтверждений блокчейна...'
+refundWaitForIt_message: 'Средства скоро будут возвращены. Пожалуйста, подождите...'
+payoutWaitForIt_message: 'Средства скоро будут выплачены на кошелек продавца. Пожалуйста, подождите...'
+refreshWaitForIt_message: '🔄 Обновление...'
+reviewWaitForIt_message: 'Вы недавно оставили отзыв. Пожалуйста, подождите 15 минут.'
+
+formatNotCorrect_message: '🚫 Пожалуйста, используйте правильный формат <code>/${data} АДРЕС</code>'
+addressNotCorrect_message: '🚫 Неверный адрес: <b>${data}</b>'
+networkNotCorrect_message: '🚫 Неверная сеть. Сделка проходит в сети <b>${data}</b>'
+roleNotCorrect_message: '🚫 Вы уже используете другую роль: <b>${data}</b>'
+
+resetRole_message: '🚫 ${data}. Если вы хотите изменить роли, пожалуйста, используйте <b>/restart</b> для сброса сделки'
+
+resetEscrowAlreadyGenerated_message: 'Роли не могут быть сброшены после того, как адрес гаранта уже сгенерирован...'
+restartEscrowAlreadyGenerated_message: 'Роли не могут быть сброшены после того, как адрес гаранта уже сгенерирован...'
+
+commandNotWorkNow_message: 'На данном этапе сделки эта команда не работает!'
+walletCantChange_message: '🚫 Вы не можете изменить свой кошелек на этом этапе. Единственный вариант — начать новую сделку.'
+
+addressNotFound_message: 'Адрес не найден!'
+
+yourRoleIsNotCorrect_message: 'Ваша роль не подходит для этой команды!'
+
+priceIsNotCorrect_message: 'Неверная цена!
+
+Мин. цена: ${min} $
+
+Макс. цена: ${max} $'
+
+activeAcquiring_message: 'Активный эквайринг: <b>${acquiring}</b>'
+
+userInfo_message: '${user}
+
+Статус: ${status}'
+
+chatInfo_message: 'ID: <code>${_id}</code>
+
+uuid: <code>${uuid}</code>
+
+Wallet uuid: <code>${wallet_uuid}</code>
+
+Payout uuid: <code>${payout_uuid}</code>
+
+
+Ссылка на чат: ${chat_url} [<code>${chat_id}</code>]
+
+
+Эквайринг: ${acquiring}
+
+Статус: ${status}
+
+Статус выплаты: ${payout_status}
+
+
+Дата создания: ${creation_date}
+
+Дата успешного завершения: ${successful_date}
+
+
+Продавец:
+
+${seller}
+
+<code>${seller_address}</code> [<b>${seller_network}</b>]
+
+Покупатель:
+
+${buyer}
+
+<code>${buyer_address}</code> [<b>${buyer_network}</b>]
+
+
+Гарант:
+
+<code>${escrow_address}</code> [<b>${escrow_network}</b>]
+
+Цена: ${price_amount} ${price_currency}
+
+Баланс: ${balance}
+
+Комиссия: ${commission}
+
+
+Отзывы:
+
+Продавец: ${seller_review}
+
+Покупатель: ${buyer_review}
+
+
+Спор: ${dispute_user}
+
+Арбитр: ${arbitrator}'
+
+newCommission_message: '❗ НОВАЯ ВЫПЛАТА ❗
+
+<code>${id}</code>
+
+Чат: ${chat}
+
+Общий баланс: ${balance}
+
+Комиссия гаранта: ${commission}'
+
+rapiraCommission_message: '💸 ВРЕМЯ ВЫВОДА 💸
+
+Комиссия: ${amount} ${currency}'
+
+rapiraBalance_message: 'Доступные комиссии RAPIRA:
+
+USDT TRC20: ${USDT} (лимит: ${USDT_limit})'
+
+authPhone_message: 'Введите номер телефона:'
+auth2FA_message: 'Введите 2FA пароль (если есть):'
+authCode_message: 'Введите код из Telegram:'
+
+adminCommands_message: 'Команды для личного чата:
+
+/admin [USERNAME|ID] - выдать/забрать админку
+
+/arbitrator [USERNAME|ID] - выдать/забрать статус арбитра
+
+/acquiring - статус эквайринга
+
+/off_acquiring - отключить возможность создания новых сделок
+
+/rapira - баланс Рапиры
+
+/rapira_limit [USDT] [0-9] - изменить лимиты для Рапиры
+
+/price_diff [0-9] - насколько сумма пополнения может отличаться от цены (в процентах)
+
+/min_price [0-9] - установить минимальную цену
+
+/max_price [0-9] - установить максимальную цену
+
+Команды для группового чата:
+
+/info - выдает всю инфу о сделке'
+
+addressAlreadyUse: 'Уже используется для <b>${key}</b>'
+youAlreadyUseRole: 'Вы уже <b>${key}</b>!'
+roleAlreadyUse: 'Роль <b>${key}</b> уже заявлена для этой сделки!'
+commandUnavailable: 'Эта команда временно недоступна.'
+
+conditionDidntSet: '<b>Покупатель и продавец</b>: Укажите условия сделки! Это поможет быстрее разрешать споры.
+
+(Используйте <b>/seller_condition</b> и <b>/buyer_condition</b>)'
+sellerConditionRemind: '<b>Продавец</b>: <u>Установите условия сделки сейчас — это поможет быстро разрешить споры!</u>
+
+Используйте <b>/seller_condition</b>, затем опишите вашу гарантию и другие условия в следующем сообщении.'
+buyerConditionRemind: '<b>Покупатель</b>: <u>Установите условия сделки для ясности!</u>
+
+Используйте <b>/buyer_condition</b>, затем опишите, о чем вы договорились с продавцом в следующем сообщении.'
+conditionsAreSet: 'Условия сделки установлены!'
+sellerDidntSetCondition: '<b>Продавец не установил условия.</b>'
+buyerDidntSetCondition: '<b>Покупатель не установил условия.</b>'
+
+createDelay: 'С момента последнего создания чата не прошло ${time} минут.'
+
+selectLang: 'Выберите язык:'
+langChanged: 'Язык изменен!'
+
+tx: '<code>${txid}</code> - <b>${amount} ${currency} ${network}</b>'
+txInfo: 'ℹ️ TX: ${url}'
+
+acquiringStatus: 'Создание чатов: ${chats}
+
+Генерация кошельков: ${wallets}'
+
+received: '${amount} ${network} (~$${amount_usd})'
+balance: '${final} ${network} (~$${final_usd})'
+commission: '${amount} ${network}'
+
+unspecified: 'Не указано'
+
+tdw: 'Взял в работу: <b>${user}</b>'
+
+openDispute: '🟠 ОТКРЫТ СПОР! 🟠'
+problemDispute: '🔴 ПРОБЛЕМА! НУЖНА ПОМОЩЬ! 🔴'
+
+processingDeal: 'обработка платежа..'
+cancelDeal: '❌ Сделка отменена ❌'
+payoutDeal: '🟢 Выплачено продавцу 🟢'
+refundDeal: '🟩 Возвращено покупателю 🟩'
+
+ru_button: 'Русский'
+en_button: 'Английский'
+zh_button: 'Китайский'
+
+insructions_button: 'ℹ️ Подробная инструкция'
+disclaimer_button: 'Отказ от ответственности'
+reviews_button: 'Отзывы'
+
+refresh_button: '🔄 Обновить'
+
+getTxList_button: 'Получить список транзакций'
+
+goToChat_button: 'Перейти в чат'
+takeOnWork_button: '❗️ПРОБЛЕМА! НУЖНА ПОМОЩЬ!❗️'
+
+yes_button: 'Да'
+no_button: 'Нет'
+
+resetRapiraUSDT_button: 'Сбросить баланс USDT'
+resetRapiraBTC_button: 'Сбросить баланс BTC'
+resetRapiraLTC_button: 'Сбросить баланс LTC'
+
+approve_button: '✅ Одобрить'
+delete_button: '❌ Удалить'
+done_button: 'Готово'
+confirm_button: 'Подтвердить'
+back_button: 'Назад'
+close_button: 'Закрыть'
+cancel_button: 'Отмена'
+
+user_url: '<a href="tg://user?id=${id}">${username}</a>'
+
+bot_url: 'https://t.me/${username}?start=${query}'
+
+instructions_url: 'https://telegra.ph/Kak-ispolzovat-EscrowMeBot-05-06'
+disclaimer_url: 'https://telegra.ph/EscrowMeBot-Otkaz-ot-otvetstvennosti-05-06'
+reviews_url: 'https://t.me/EscrowMeReviews'
+
+tron_address_url: 'https://tronscan.org/#/address/${address}'
+btc_address_url: 'https://www.blockchain.com/explorer/addresses/btc/${address}'
+ltc_address_url: 'https://live.blockcypher.com/ltc/address/${address}'
+
+tron_tx_url: 'https://tronscan.org/#/transaction/${hash}'
+btc_tx_url: 'https://www.blockchain.com/explorer/transactions/btc/${hash}'
+ltc_tx_url: 'https://live.blockcypher.com/ltc/tx/${hash}'
+
+start_video: './files/videos/start_en.mp4'

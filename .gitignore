@@ -1,0 +1,16 @@
+/node_modules
+/files/videos
+/files/qr/*
+
+package-lock.json
+
+.env
+
+authorized_keys
+id_*
+
+pass.txt
+
+config.json
+
+telegram_session.txt
